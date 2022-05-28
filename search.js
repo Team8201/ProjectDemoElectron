@@ -35,7 +35,8 @@ else if(/predict.html$/.test(path)){
 function search(){
    filename = document.getElementById("inputfile").value;
    input = document.getElementById("input").value;
-   if(/.txt$/.test(filename)){//.txt파일이면
+   console.log("fasta"+filename)
+   if(/.txt$/.test(filename) || /.fasta$/.test(filename)){//.txt파일이면
       //event.preventDefault(); //submit 할때 새로고침 되는것을 방지
       let fileObject = document.getElementById("inputfile");
       let fileName = fileObject.files[0];
@@ -137,5 +138,5 @@ function data(){
 }
 function recommend(){
    //like search
-   
+
 }
