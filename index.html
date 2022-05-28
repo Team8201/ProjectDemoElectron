@@ -1,0 +1,55 @@
+<html>
+    <head>
+    <style>
+        .box-main{
+            font-size:32px;
+            text-align: center;
+            font-weight:bold;
+            margin-top:15%;
+        }
+    </style>
+    </head>
+    <body>
+      <div class='box-main'>
+          Hello! Electron!
+      </div>
+      
+       <table>
+          <td>
+              <tr>
+                <input type ="text" name="input" id="input">
+                
+              </tr>
+              <tr>
+                <button name="search" id="search" >검색</button>
+                <script src="search.js"></script>
+             
+            </tr>
+        </td>
+        <td>
+          <input type ="file" id="inputfile" accept=".txt" onchange="inputfile()"/></input>
+          
+          <!--<label for="fileUpload">파일 추가</label>
+          <button name="fileSearch" id="fileSearch">파일</button>-->
+        </td>
+    </table>   
+
+    
+      <!--
+  <form action="search.js">
+        문자열 : <input id="search" type="text"/><br>
+        파일 : <input type="file" accept=".txt"/><br>
+        <input type="submit" value="검색" onclick="search()">
+
+    </form>
+      -->
+       
+      <!--
+    <form>
+          <input type ="file" accept=".txt" onchange="aaa"/>
+          <input type = "submit">
+      </form>
+      -->
+      
+  </body>
+</html>
