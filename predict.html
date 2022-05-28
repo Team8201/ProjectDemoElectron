@@ -1,35 +1,21 @@
 <html>
     <head>
-    <style>
-        .box-main{
-            font-size:32px;
-            text-align: center;
-            font-weight:bold;
-            margin-top:15%;
-        }
-    </style>
-    
+        <link rel="stylesheet" type="text/css" href="index.css?var=1">
     </head>
-  <body>
-      <div class='box-main'>
-          Hello! prediction!
-      </div>
-      
-      <table>
-          <td>
-              <tr>
-                
-                <input type ="text" name="predictResult" id="predictResult" readonly>
-              </input>
-              
-              </tr>
-              <tr>
-                <button name="recommend" id="recommend">추천</button>
-               
-              </tr>
-              
-          </td>
-          <script src="search.js"></script>
-      </table>
+    <body>
+        <div class='box-main'>
+        Here you want!!
+        </div>
+        <div class = "wrap">
+            <div class = "search">
+                <input type ="text" class="searchTerm" name="predictResult" id="predictResult" readonly>
+                <button class = "searchButton" name="recommend" id="recommend" >
+                    추천
+                </button>
+            </div>
+            <div class = "result">
+            </div>
+        </div>
+        <script src="search.js"></script>
   </body>
 </html>
