@@ -4,12 +4,21 @@ const { webContents } = require("electron");
 const ipcRenderer = require('electron').ipcRenderer;
 const dialog  = require('electron').remote;
 
+//파이썬 파일 호출
+//const spawn= require('child_process').spawn;
+
+//const get_input_py = spawn('python',['oneHotencoder.py',input])
+//const get_file_py = spawn('python',['oneHotencoder.py',file_data])
 //document.getElementById("search").addEventListener("click",search);
 var path = document.location.pathname;
 let filename;//파일이름
 let file_data;//파일 내의 데이터
 let input;
 let save_data;
+let one_hot_data;
+let predict_result;
+let recommend_result;
+
 console.log(path);
 if(/index.html$/.test(path)){
    document.getElementById("search").addEventListener("click",search);
@@ -22,9 +31,26 @@ else if(/predict.html$/.test(path)){
       save_data=arg;
       console.log("save_data1"+save_data);
       document.getElementById("predictResult").value=save_data;
-      predict(save_data);
+      //const one_hot = spawn('python',['oneHotencoder.py',save_data]);
+      //one_hot.stdout.on('data',(result)=>{
+      //   one_hot_data=result.data;
+      //   console.log(one_hot);
+      //})
+      
+      ipcRenderer.send('get-onehot',save_data);
+      ipcRenderer.on("reply-onehot",(event,arg)=>{
+         //one_hot_data=arg;
+         predict_result=arg;
+         //console.log("one_hot_data : "+one_hot_data);
+         console.log("predict result : "+predict_result);
+         
+         //결과값 페이지에 삽입하기
+         document.getElementById('predict_Result').value=predict_result;
+      })
+      
+      //predict(save_data);
    });
-   console.log("save_data2"+save_data);
+   //console.log("save_data2"+save_data);//여기선 안담김.
    document.getElementById("recommend").addEventListener("click",recommend);
 }else if(/recommend.html$/.test(path)){
 
@@ -36,7 +62,7 @@ function search(){
    filename = document.getElementById("inputfile").value;
    input = document.getElementById("input").value;
    console.log("fasta"+filename)
-   if(/.txt$/.test(filename) || /.fasta$/.test(filename)){//.txt파일이면
+   if(/.txt$/.test(filename) || /.fasta$/.test(filename) || /.seq$/.test(filename)){//.txt파일이면
       //event.preventDefault(); //submit 할때 새로고침 되는것을 방지
       let fileObject = document.getElementById("inputfile");
       let fileName = fileObject.files[0];
@@ -57,13 +83,15 @@ function search(){
    //    ipcRenderer.send('pridictfile-view',file_data);
    // }
    }else if(filename){//확장자 틀렸을때
+      //이거 수정해야함
+
       ipcRenderer.send('fileTypeError');
    }
    else{//문자열일때
    
    console.log(input);
    console.log(typeof(input));
-   if(/[^(A|T|C|G)]/.test(input) || input===""){// not ATCG 이면 true
+   if(/[^(A|T|C|G|R|Y|S|W|K|M|B|D|H|V|N)]/.test(input) || input===""){// not ATCG 이면 true
       ipcRenderer.send('stringError');
    }else{//ATCG 이면 다음 페이지
       ipcRenderer.send('pridict-view',input);
@@ -138,5 +166,5 @@ function data(){
 }
 function recommend(){
    //like search
-
+   ipcRenderer.send('recommend-view',save_data);
 }
