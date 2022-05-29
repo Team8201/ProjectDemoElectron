@@ -1,4 +1,4 @@
-<html>
+<!--<html>
     <head>
     <style>
         .box-main{
@@ -24,12 +24,35 @@
               
               </tr>
               <tr>
-                <button name="recommend" id="recommend">추천</button>
+                <button name="recommend" id="recommend" onclick="location.href='recommend.html'">추천</button>
                
               </tr>
               
           </td>
           <script src="search.js"></script>
       </table>
+  </body>
+</html>
+-->
+<html>
+    <head>
+        <link rel="stylesheet" type="text/css" href="index.css?var=1">
+    </head>
+    <body>
+        <div class='box-main'>
+        Here you want!!
+        </div>
+        <div class = "wrap">
+            <div class = "search">
+                <input type ="text" class="searchTerm" name="predictResult" id="predictResult" readonly>
+                <button class = "searchButton" name="recommend" id="recommend" >
+                    추천
+                </button>
+            </div>
+            <div class = "result">
+                <input type = "text" id="predict_Result" readonly>
+            </div>
+        </div>
+        <script src="search.js"></script>
   </body>
 </html>

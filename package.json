@@ -5,5 +5,9 @@
     },
     "devDependencies": {
         "electron": "^19.0.1"
+    },
+    "dependencies": {
+        "@tensorflow/tfjs": "^3.18.0",
+        "python-shell": "^3.0.1"
     }
 }

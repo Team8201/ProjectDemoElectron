@@ -1,4 +1,4 @@
-<html>
+<!--<html>
     <head>
     <style>
         .box-main{
@@ -29,18 +29,43 @@
         <td>
           <input type ="file" id="inputfile" accept=".txt" onchange="inputfile()"/></input>
           
-          <!--<label for="fileUpload">파일 추가</label>
-          <button name="fileSearch" id="fileSearch">파일</button>-->
+          
         </td>
     </table>   
 
-    
+  </body>
+</html>
+-->
+
+<html>
+    <head>
+      <link rel="stylesheet" type="text/css" href="index.css?var=1">
+    </head>
+    <body>
+      <div class='box-main'>
+          Predict plant's Chloroplast DNA!
+      </div>
+      <div class = "wrap">
+        <div class = "search">
+          <input type ="text" name="input" id="input" class="searchTerm" placeholder="Please insert DNA sequence">
+            <button name="search" id="search" class = "searchButton">
+              Q
+            </button>
+          <input type ="file" id="inputfile" accept=".txt" onchange="inputfile()" style = "display:none">
+          <label for="inputfile" id="inputlabel" >file</label>
+          <!--<label for="fileUpload">파일 추가</label>
+          <button name="fileSearch" id="fileSearch">파일</button>-->
+        </div>
+        <div class = "result">
+        </div>
+      </div>
+      
+        
       <!--
   <form action="search.js">
         문자열 : <input id="search" type="text"/><br>
         파일 : <input type="file" accept=".txt"/><br>
         <input type="submit" value="검색" onclick="search()">
-
     </form>
       -->
        
@@ -52,4 +77,5 @@
       -->
       
   </body>
+  <script src="search.js"></script>
 </html>

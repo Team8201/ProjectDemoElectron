@@ -1,4 +1,9 @@
 //backend
+
+//tensorflow 
+//import * as tf from "@tensorflow/tfjs";
+//const model = await tf.loadLayersModel('localstorage://caeDNA11.h5');
+
 const { app, BrowserWindow } = require('electron') // Load Electron
 //export {createWindow};
 const { ipcMain } = require('electron')
@@ -6,8 +11,19 @@ const path = require('path');
 const url = require('url');
 const { dialog } = require('electron');  //새로 사용할 질문창
 
+//파이썬 파일
+let {PythonShell} = require('python-shell');
+const { generateKeyPairSync } = require('crypto');
+//const { stringify } = require('querystring');
+const spawn = require('child_process').spawn;
+
+
 var input;
 var file_input;
+let one_hot;
+let predict_result;
+let dna_data;
+
 app.disableHardwareAcceleration()
 //[27384:0528/004556.979:ERROR:gpu_init.cc(481)] 
 //Passthrough is not supported, GL is disabled, ANGLE is
@@ -92,4 +108,54 @@ ipcMain.on('getdata',(event,args)=>{
         
     }
     
+});
+ipcMain.on('get-onehot',(event,args)=>{
+    // PythonShell.run('oneHotencoder.py',args,(err,data)=>{
+    //     if (err) throw err;
+    //     console.log("pydata : "+data)
+    // })
+    const pythonProcess = spawn('python',["oneHotencoder.py", args]);
+    pythonProcess.stdout.on('data',(data)=>{
+        console.log(data)
+        console.log("data.length : " + data.length)//104+length
+        console.log(data.length)
+        console.log("data type: " + typeof(data))
+        console.log("toString: "+data.toString())
+        console.log(data.toString())
+        console.log("toString length: "+data.toString().length)
+        console.log("data[0] : "+data[0].toString())
+        console.log("data[1] : "+data[1].toString())
+        console.log("data[2] : "+data[2].toString())
+        //console.log("data Substring : "+ data.substring(104))
+        //console.log("data Substring : "+ data.substring(105))
+        
+        //console.log(data.toString().substring(26+args.length))
+        //console.log(data.toString().substring(29))
+        //3개일때 data.length 108, 29부터 substring
+        //0개 -> 26, n개 -> 26+args.length
+        //one_hot = data.toString().substring(26+args.length);
+        predict_result=data.toString()
+        //event.reply("reply-onehot",one_hot);
+        event.reply("reply-onehot",predict_result);
+    })
+    // if(input){
+    //     console.log("putdata1"+input);
+    //     event.reply('getdata-reply',input);
+    // }else if(file_input){
+    //     console.log("putdata2"+file_input);
+    //     event.reply('getdata-reply',file_input);
+        
+    //}
+    
+});
+
+ipcMain.on('recommend-view',(event, args)=>{// 다음 페이지
+    dna_data = args;
+    console.log(dna_data);
+    
+    BrowserWindow.getAllWindows()[0].loadURL(url.format({
+        pathname : path.join(__dirname,'recommend.html'),
+        protocol:'file',
+        slashes:true
+    }));
 });
