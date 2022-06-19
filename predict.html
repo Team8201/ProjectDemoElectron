@@ -50,7 +50,10 @@
                 </button>
             </div>
             <div class = "result">
-                <input type = "text" id="predict_Result" readonly>
+                <label for = "predict_Result" id = "predict_Result_label" class="predict_Result_label"><br>Gene</label>
+                <input type = "text" id="predict_Result" class ="predict_Result" value="now loading..." readonly>
+                <label for = "predict_Restauration" id = "predict_Restauration_label" class="predict_Result_label">Mean Absolute Error</label>
+                <input type = "text" id="predict_Restauration" class ="predict_Result" value="now loading..." readonly>
             </div>
         </div>
         <script src="search.js"></script>

@@ -23,6 +23,7 @@ var file_input;
 let one_hot;
 let predict_result;
 let dna_data;
+let recommend_data;
 
 app.disableHardwareAcceleration()
 //[27384:0528/004556.979:ERROR:gpu_init.cc(481)] 
@@ -75,11 +76,11 @@ ipcMain.on('pridict-view',(event, args)=>{// 검사 통과 후 다음 페이지
 });
 
 ipcMain.on('stringError',()=>{
-    dialog.showErrorBox("문자열 에러","ATCG로만 이루어져야 합니다.");
+    dialog.showErrorBox("입력 문자열 에러","IUPAC nucleotide Code표 내의 문자열로만 이루어져야 합니다.");
     //dialog.showMessageBox(null,{type:'info',title:'Ok', message:'ATCG로만 이루어져야 합니다.'});  
 })
 ipcMain.on('fileTypeError',()=>{
-    dialog.showErrorBox("파일 형식 에러",".txt 등등 이루어져야 합니다.");
+    dialog.showErrorBox("파일 형식 에러","확장자는 .txt .fasta .seq .xml 중 하나여야 합니다.");
     //dialog.showMessageBox(null,{type:'info',title:'Ok', message:'ATCG로만 이루어져야 합니다.'});  
 })
 
@@ -158,4 +159,42 @@ ipcMain.on('recommend-view',(event, args)=>{// 다음 페이지
         protocol:'file',
         slashes:true
     }));
+});
+ipcMain.on('first-view',()=>{// 첫 페이지
+    //dna_data = args;
+    //console.log(dna_data);
+    input=undefined
+    file_input=undefined
+    console.log(input);
+    console.log(file_input);
+    BrowserWindow.getAllWindows()[0].loadURL(url.format({
+        pathname : path.join(__dirname,'index.html'),
+        protocol:'file',
+        slashes:true
+    }));
+});
+
+
+ipcMain.on('get-recommend',(event,args)=>{
+    console.log("dna_data"+dna_data)
+    const pythonProcess1 = spawn('python',["recommand.py", dna_data]);
+    pythonProcess1.stdout.on('data',(data)=>{
+        console.log(data)
+        console.log("recommend.length : " + data.length)//104+length
+        console.log(data.length)
+        console.log("recommend type: " + typeof(data))
+        console.log("recommend toString: "+data.toString())
+        console.log(data.toString())
+        console.log("recommend toString length: "+data.toString().length)
+        //console.log("data[0] : "+data[0].toString())
+       // console.log("data[1] : "+data[1].toString())
+        //console.log("data[2] : "+data[2].toString())
+
+        recommend_data=data.toString()
+        
+        event.reply("reply-recommend",recommend_data);
+
+    })
+  
+    
 });
