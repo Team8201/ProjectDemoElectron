@@ -26,6 +26,9 @@ if(/index.html$/.test(path)){
 else if(/predict.html$/.test(path)){
    console.log("input"+input);
    console.log("file_data"+file_data);
+   
+   let start = new Date();
+
    ipcRenderer.send('getdata',save_data);
    ipcRenderer.on('getdata-reply',(event,arg)=>{
       save_data=arg;
@@ -45,7 +48,18 @@ else if(/predict.html$/.test(path)){
          console.log("predict result : "+predict_result);
          
          //결과값 페이지에 삽입하기
-         document.getElementById('predict_Result').value=predict_result;
+         document.getElementById('predict_Restauration').value=predict_result;
+         if(parseFloat(predict_result)<0.2){
+            document.getElementById('predict_Result').value="rbcl 유전자 입니다.";
+            let end = new Date();
+            console.log("predict time : "+((end-start)/1000)+"s");
+         }
+         else{
+            document.getElementById('predict_Result').value="rbcl 유전자가 아닙니다.";
+            let end = new Date();
+            console.log("predict time : "+((end-start)/1000)+"s");
+         }
+         
       })
       
       //predict(save_data);
@@ -53,7 +67,12 @@ else if(/predict.html$/.test(path)){
    //console.log("save_data2"+save_data);//여기선 안담김.
    document.getElementById("recommend").addEventListener("click",recommend);
 }else if(/recommend.html$/.test(path)){
-
+   ipcRenderer.send('get-recommend',(recommend_result));
+   ipcRenderer.on("reply-recommend",(event,arg)=>{
+      recommend_result=arg;
+      document.getElementById("recommend_Result").value=recommend_result;
+   });
+   document.getElementById("back-to-first").addEventListener("click",back);
 }
 
 //document.getElementById("inputfile").onchange(inputfile);
@@ -62,7 +81,9 @@ function search(){
    filename = document.getElementById("inputfile").value;
    input = document.getElementById("input").value;
    console.log("fasta"+filename)
-   if(/.txt$/.test(filename) || /.fasta$/.test(filename) || /.seq$/.test(filename)){//.txt파일이면
+   console.log(typeof(filename))
+   console.log("inputval"+input)
+   if(/.txt$/.test(filename) || /.fasta$/.test(filename) || /.seq$/.test(filename) || /.xml$/.test(filename)){//.txt .파일이면
       //event.preventDefault(); //submit 할때 새로고침 되는것을 방지
       let fileObject = document.getElementById("inputfile");
       let fileName = fileObject.files[0];
@@ -82,13 +103,17 @@ function search(){
    // }else{//ATCG 이면 다음 페이지
    //    ipcRenderer.send('pridictfile-view',file_data);
    // }
-   }else if(filename){//확장자 틀렸을때
-      //이거 수정해야함
-
-      ipcRenderer.send('fileTypeError');
+   }else if(filename){
+      if(!(/.txt$/.test(filename) && /.fasta$/.test(filename) && /.seq$/.test(filename) && /.xml$/.test(filename))){
+      //if(!(/.txt$/.test(filename) || /.fasta$/.test(filename) || /.seq$/.test(filename))){
+         // !(.txt or .fasta or .seq) -> not .txt and not .fasta and not .seq
+         //확장자가 틀릴 때 
+         console.log("filetypeerror"+input);
+         ipcRenderer.send('fileTypeError');
+      }
    }
+   //else if(input){//문자열일때
    else{//문자열일때
-   
    console.log(input);
    console.log(typeof(input));
    if(/[^(A|T|C|G|R|Y|S|W|K|M|B|D|H|V|N)]/.test(input) || input===""){// not ATCG 이면 true
@@ -139,7 +164,8 @@ function parseText(text) {
    file_data=text;
    console.log("1"+file_data);
    console.log(typeof(file_data));
-   if(/[^(A|T|C|G)]/.test(file_data) || file_data===""){// not ATCG 이면 true
+
+   if(/[^(A|T|C|G|R|Y|S|W|K|M|B|D|H|V|N)]/.test(file_data) || file_data===""){// not ATCG 이면 true
     ipcRenderer.send('stringError');
  }else{//ATCG 이면 다음 페이지
     ipcRenderer.send('pridictfile-view',file_data);
@@ -167,4 +193,8 @@ function data(){
 function recommend(){
    //like search
    ipcRenderer.send('recommend-view',save_data);
+}
+function back(){
+   //like search
+   ipcRenderer.send('first-view');
 }
